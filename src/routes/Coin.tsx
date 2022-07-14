@@ -29,13 +29,23 @@ const Loader = styled.span`
 const Overview = styled.div`
     display: flex;
     justify-content: space-between;
-    background-color: #0fb1b47f;
+    background-color:#e84118;
     padding: 10px 20px;
     border-radius: 10px;
 `;
 
 const OverviewItem = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #00a8ff;
 
+    span:first-child {
+        font-size: 10px;
+        font-weight: 400;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+    }
 `;
 
 const Description = styled.p`
