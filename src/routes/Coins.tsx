@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoin } from "./api";
 
-// Befind the scene? 
 const Container = styled.div`
     padding: 0px 20px;
     // 화면을 크게 했을 때, 모바일 화면처럼 웹 prop 들을 가운데에 위치 시킴
@@ -48,7 +48,7 @@ const Title = styled.h1`
    color: ${props => props.theme.accentColor};
 `;
 
-interface CoinInterface {
+interface ICoin {
     id: string,
     name: string,
     symbol: string,
@@ -74,31 +74,23 @@ const Img = styled.img`
  * Sending the state to path (behind the scene data)
  */
 function Coins() {
-    // Let CoinInterface is an array of coins
-    // Default is the empty array.
-    const [coins, setCoins] = useState<CoinInterface[]>([]);
-    const [loading, setLoading] = useState(true);
 
-    // Trick - Make a function which is executed immediately ('functions')();
-    useEffect(() => {
-        (async () => {
-            const response = await fetch("https://api.coinpaprika.com/v1/coins");
-            const json = await response.json();
-            setCoins(json.slice(0, 100));
-            setLoading(false);
-        })();
-    }, []);
+    /* useQuery hook is going to call your fetchCoin function,
+    when fetcher function is loading, react query will let you know 'isLoading(boolean)'
+    when fetcher function is done, react query is going to put json into 'data'  */
+    // Also react query keeps data in cache.
+    const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoin);
 
     return (
         <Container>
             <Header>
                 <Title>Coin</Title>
             </Header>
-            {loading ? (
+            {isLoading ? (
                 <Loader>"Loading..."</Loader>
             ) : (
                 <CoinsList>
-                    {coins.map((coin) =>
+                    {data?.slice(0,100).map((coin) =>
                         <Coin key={coin.id}>
                             <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} />
                             <Link to={`/${coin.id}`} state={coin}>

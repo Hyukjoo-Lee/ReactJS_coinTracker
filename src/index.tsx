@@ -13,8 +13,10 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <div>
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </QueryClientProvider>
   </div>
 );

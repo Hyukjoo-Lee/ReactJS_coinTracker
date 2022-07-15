@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import { Route, Routes, Outlet } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useLocation, useParams, useMatch } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoinInfo, fetchCoinTickers } from "./api";
 import Chart from "./Chart";
 import Price from "./Price";
 
@@ -64,7 +66,7 @@ const Tabs = styled.div`
     gap: 10px;
 `;
 
-const Tab = styled.span<{ isActive: boolean}>`
+const Tab = styled.span<{ isActive: boolean }>`
   text-align: center ;
   text-transform: uppercase;
   font-size: 12px;
@@ -86,7 +88,7 @@ interface LocationState {
     }
 };
 
-interface InfoData {
+interface infoData {
     id: string;
     name: string;
     symbol: string;
@@ -142,18 +144,27 @@ interface PriceData {
     };
 }
 
+// Caching React query devtools: 캐쉬에 데이터가 어떤것들이 있는지, Show data explorer
+// Fetcher function - key must be unique to be stored and operated properly in the react query cache system.
 function Coin() {
-    const [loading, setLoading] = useState(true);
-    const [info, setInfo] = useState<InfoData>();
-    const [priceInfo, setPriceInfo] = useState<PriceData>();
     const { coinId } = useParams();
     // Over react-router-dom v6, use as ...
     const { state } = useLocation() as LocationState;
     const priceMatch = useMatch(`/${coinId}/price`);
     const chartMatch = useMatch(`/${coinId}/chart`);
+    const { isLoading: infoLoading, data: infoData } = useQuery<infoData>(
+        ["infoData", coinId],
+        () => fetchCoinInfo(coinId)
+    );
 
-    console.log(priceMatch)
-    let update = priceInfo?.last_updated;
+    const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
+        ["tickers", coinId],
+        () => fetchCoinTickers(coinId)
+    );
+
+    const loading = infoLoading || tickersLoading;
+
+    let update = tickersData?.last_updated;
     update = new Date();
 
     const attachZero = (date: Date) => {
@@ -177,22 +188,12 @@ function Coin() {
     const time = attachZero(update);
 
     const updateHour = time[0] + ":" + time[1] + ":" + time[2];
-    const updateDate = update.getMonth() + "/" + update.getDate() + "/" + update.getFullYear();
-    
-    useEffect(() => {
-        (async () => {
-            const infoData = await (
-                await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-            ).json();
-            const priceData = await (
-                await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-            ).json();
 
-            setInfo(infoData);
-            setPriceInfo(priceData);
-            setLoading(false);
-        })();
-    }, [coinId])
+    const updateDate = ((update.getMonth() < 10) ? (
+        "0" + (update.getMonth() + 1).toString()
+    ) : (
+        update.getMonth() + 1
+    )) + "/" + update.getDate() + "/" + update.getFullYear();
 
 
     return (
@@ -203,7 +204,7 @@ function Coin() {
                      * OR 
                      * if loading is in progress, show "Loading...", if not loading, show the name received from API 
                      */}
-                    {state?.name ? state.name : loading ? "Loading..." : info?.name}
+                    {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
                 </Title>
             </Header>
             {loading ? (
@@ -214,22 +215,22 @@ function Coin() {
                     <Overview>
                         <OverviewItem>
                             <span>Rank</span>
-                            <span>{info?.rank}</span>
+                            <span>{infoData?.rank}</span>
                         </OverviewItem>
                         <OverviewItem>
                             <span>Symbol</span>
-                            <span>{info?.symbol}</span>
+                            <span>{infoData?.symbol}</span>
                         </OverviewItem>
                         <OverviewItem>
                             <span>Open Source</span>
-                            <span>{info?.open_source ? ("YES") : ("NO")}</span>
+                            <span>{infoData?.open_source ? ("YES") : ("NO")}</span>
                         </OverviewItem>
                     </Overview>
-                    <Description>{info?.description}</Description>
+                    <Description>{infoData?.description}</Description>
                     <Overview>
                         <OverviewItem>
                             <span>Total Supply</span>
-                            <span>{priceInfo?.total_supply}</span>
+                            <span>{tickersData?.total_supply}</span>
                         </OverviewItem>
                         <OverviewItem>
                             <span>Last Update (PDT)</span>
@@ -238,12 +239,12 @@ function Coin() {
                     </Overview>
 
                     <Tabs>
-                            <Tab isActive={ chartMatch !== null}>
+                        <Tab isActive={chartMatch !== null}>
                             <Link to={`/${coinId}/chart`}>
                                 Chart
                             </Link>
                         </Tab>
-                            <Tab isActive={priceMatch !== null}>
+                        <Tab isActive={priceMatch !== null}>
                             <Link to={`/${coinId}/price`}>
                                 Price
                             </Link>

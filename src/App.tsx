@@ -1,7 +1,7 @@
 import React from "react";
 import styled, { createGlobalStyle } from "styled-components";
 import Router from "./routes/Router";
-
+import { ReactQueryDevtools } from "react-query/devtools";
 /**
  * GlobalStyle : Global style-component, 
  * it will go through the document and insert the styles to the head.
@@ -80,6 +80,7 @@ function App() {
     <>
       <GlobalStyle />
       <Router />
+      <ReactQueryDevtools initialIsOpen={true} />
     </>
   );
 }
