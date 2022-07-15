@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
+import { updateArrayLiteral } from "typescript";
 
 const Container = styled.div`
     padding: 0px 20px;
@@ -14,6 +15,7 @@ const Header = styled.header`
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 20px;
 `;
 
 const Title = styled.h1`
@@ -29,7 +31,7 @@ const Loader = styled.span`
 const Overview = styled.div`
     display: flex;
     justify-content: space-between;
-    background-color:#e84118;
+    background-color: black;
     padding: 10px 20px;
     border-radius: 10px;
 `;
@@ -59,17 +61,99 @@ interface LocationState {
     }
 };
 
+interface InfoData {
+    id: string;
+    name: string;
+    symbol: string;
+    rank: number;
+    is_new: boolean;
+    is_active: boolean;
+    type: string;
+    description: string;
+    message: string;
+    open_source: boolean;
+    started_at: string;
+    development_status: string;
+    hardware_wallet: boolean;
+    proof_type: string;
+    org_structure: string;
+    hash_algorithm: string;
+    first_data_at: string;
+    last_data_at: string;
+}
+
+interface PriceData {
+
+    id: string;
+    name: string;
+    symbol: string;
+    rank: number;
+    circulating_supply: number;
+    total_supply: number;
+    max_supply: number;
+    beta_value: number;
+    first_data_at: string;
+    last_updated: Date;
+    quotes: {
+        USD: {
+            ath_date: string;
+            ath_price: number;
+            market_cap: number;
+            market_cap_change_24h: number;
+            percent_change_1h: number;
+            percent_change_1y: number;
+            percent_change_6h: number;
+            percent_change_7d: number;
+            percent_change_12h: number;
+            percent_change_15m: number;
+            percent_change_24h: number;
+            percent_change_30d: number;
+            percent_change_30m: number;
+            percent_from_price_ath: number;
+            price: number;
+            volume_24h: number;
+            volume_24h_change_24h: number;
+        };
+    };
+}
+
 function Coin() {
     const [loading, setLoading] = useState(true);
 
-    const [info, setInfo] = useState({});
-    const [priceInfo, setPriceInfo] = useState({});
+    const [info, setInfo] = useState<InfoData>();
+    const [priceInfo, setPriceInfo] = useState<PriceData>();
 
     const { coinId } = useParams();
     // Over react-router-dom v6, use as ...
     const { state } = useLocation() as LocationState;
+    console.log(coinId);
+    
+    let update = priceInfo?.last_updated;
+    update = new Date();
 
+    const attachZero = (date: Date) => {
 
+        let arr = [];
+        let hour = "";
+        let min = "";
+        let sec = "";
+
+        if (date.getHours() < 10) { hour = "0" + date.getHours().toString(); } else { hour = date.getHours().toString(); };
+        if (date.getMinutes() < 10) { min = "0" + date.getMinutes().toString(); } else { min = date.getMinutes().toString(); };
+        if (date.getSeconds() < 10) { sec = "0" + date.getSeconds().toString(); } else { sec = date.getSeconds().toString(); };
+
+        arr[0] = hour;
+        arr[1] = min;
+        arr[2] = sec;
+
+        return arr;
+    };
+
+    const time = attachZero(update);
+
+    const updateHour = time[0] + ":" + time[1] + ":" + time[2];
+    const updateDate = update.getMonth() + "/" + update.getDate() + "/" + update.getFullYear();
+ 
     useEffect(() => {
         (async () => {
             const infoData = await (
@@ -85,15 +169,16 @@ function Coin() {
         })();
     }, [coinId])
 
+
     return (
         <Container>
             <Header>
                 <Title>
-                    {/* if there is state, show state name 
-                     OR 
-                     if loading is in progress, show "Loading...", if not loading, show the name received from API 
+                    {/* if there is a state, show the state's name 
+                     * OR 
+                     * if loading is in progress, show "Loading...", if not loading, show the name received from API 
                      */}
-                    {state?.name ? state.name : loading ? "Loading..." : null}
+                    {state?.name ? state.name : loading ? "Loading..." : info?.name}
                 </Title>
             </Header>
             {loading ? (
@@ -102,27 +187,27 @@ function Coin() {
                 <>
                     <Overview>
                         <OverviewItem>
-                            <span>Rank:</span>
-                            <span>1</span>
+                            <span>Rank</span>
+                            <span>{info?.rank}</span>
                         </OverviewItem>
                         <OverviewItem>
-                            <span>Symbol:</span>
-                            <span>$BTC</span>
+                            <span>Symbol</span>
+                            <span>{info?.symbol}</span>
                         </OverviewItem>
                         <OverviewItem>
                             <span>Open Source</span>
-                            <span>Yes</span>
+                            <span>{info?.open_source ? ("YES") : ("NO")}</span>
                         </OverviewItem>
                     </Overview>
-                    <Description>{ } Description </Description>
+                    <Description>{info?.description}</Description>
                     <Overview>
                         <OverviewItem>
-                            <span>Total Supply:</span>
-                            <span>2100000</span>
+                            <span>Total Supply</span>
+                            <span>{priceInfo?.total_supply}</span>
                         </OverviewItem>
                         <OverviewItem>
-                            <span>Max Supply:</span>
-                            <span>2100000</span>
+                                <span>Last Update (PDT)</span>
+                                <span>{updateHour} {updateDate}</span>
                         </OverviewItem>
                     </Overview>
                 </>

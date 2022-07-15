@@ -2,7 +2,7 @@
 import ReactDOM from 'react-dom/client';
 import { ThemeProvider } from 'styled-components';
 import App from './App'
-import { customTheme, theme } from './theme';
+import { theme } from './theme';
 
 
 const root = ReactDOM.createRoot(
@@ -11,7 +11,7 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <div>
-    <ThemeProvider theme={customTheme}>
+    <ThemeProvider theme={theme}>
       <App />
     </ThemeProvider>
   </div>
