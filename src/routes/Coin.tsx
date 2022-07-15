@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Route, Routes, Outlet } from "react-router-dom";
 import { Link } from "react-router-dom";
@@ -88,7 +88,7 @@ interface LocationState {
     }
 };
 
-interface infoData {
+interface InfoData {
     id: string;
     name: string;
     symbol: string;
@@ -147,19 +147,28 @@ interface PriceData {
 // Caching React query devtools: 캐쉬에 데이터가 어떤것들이 있는지, Show data explorer
 // Fetcher function - key must be unique to be stored and operated properly in the react query cache system.
 function Coin() {
+
+
+    // https://ohlcv-api.nomadcoders.workers.dev?coinId=btc-bitcoin
     const { coinId } = useParams();
     // Over react-router-dom v6, use as ...
     const { state } = useLocation() as LocationState;
     const priceMatch = useMatch(`/${coinId}/price`);
     const chartMatch = useMatch(`/${coinId}/chart`);
-    const { isLoading: infoLoading, data: infoData } = useQuery<infoData>(
+    const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
         ["infoData", coinId],
-        () => fetchCoinInfo(coinId)
+        () => fetchCoinInfo(coinId),
+        {
+            refetchInterval: 5000,
+        }
     );
 
     const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
         ["tickers", coinId],
-        () => fetchCoinTickers(coinId)
+        () => fetchCoinTickers(coinId),
+        {
+            refetchInterval: 5000,
+        }
     );
 
     const loading = infoLoading || tickersLoading;
@@ -198,6 +207,11 @@ function Coin() {
 
     return (
         <Container>
+            <Helmet>
+                <title>
+                    {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+                </title>
+            </Helmet>
             <Header>
                 <Title>
                     {/* if there is a state, show the state's name 
@@ -222,8 +236,8 @@ function Coin() {
                             <span>{infoData?.symbol}</span>
                         </OverviewItem>
                         <OverviewItem>
-                            <span>Open Source</span>
-                            <span>{infoData?.open_source ? ("YES") : ("NO")}</span>
+                            <span>Price</span>
+                            <span>{tickersData?.quotes.USD.price.toFixed(6)}</span>
                         </OverviewItem>
                     </Overview>
                     <Description>{infoData?.description}</Description>
@@ -253,7 +267,7 @@ function Coin() {
 
                     <Routes>
                         <Route path="price" element={<Price />} />
-                        <Route path="chart" element={<Chart />} />
+                        <Route path="chart" element={<Chart coinId={coinId} />} />
                     </Routes>
 
                 </>

@@ -1,3 +1,4 @@
+import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -83,6 +84,11 @@ function Coins() {
 
     return (
         <Container>
+            <Helmet>
+                <title>
+                    Coin
+                </title>
+            </Helmet>
             <Header>
                 <Title>Coin</Title>
             </Header>
@@ -90,7 +96,7 @@ function Coins() {
                 <Loader>"Loading..."</Loader>
             ) : (
                 <CoinsList>
-                    {data?.slice(0,100).map((coin) =>
+                    {data?.slice(0, 100).map((coin) =>
                         <Coin key={coin.id}>
                             <Img src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`} />
                             <Link to={`/${coin.id}`} state={coin}>
@@ -105,3 +111,7 @@ function Coins() {
 }
 
 export default Coins;
+
+// 1. Allow people go back to back (mae)
+// 2. Could be able to look more thing about the price
+// 3. Chart => Candle stickchards
