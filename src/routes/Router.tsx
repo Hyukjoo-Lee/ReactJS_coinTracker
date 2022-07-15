@@ -8,7 +8,7 @@ function Router() {
             <Routes>
                 <Route path="/" element={<Coins />} />
                 {/* /:coinId => tells Router like we will have a param in this part of URL */}
-                <Route path="/:coinId" element={<Coin />} />
+                <Route path="/:coinId/*" element={<Coin />} />
             </Routes>
         </BrowserRouter>
     );
