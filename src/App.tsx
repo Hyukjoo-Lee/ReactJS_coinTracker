@@ -1,7 +1,11 @@
 import React from "react";
-import styled, { createGlobalStyle } from "styled-components";
+import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 import Router from "./routes/Router";
 import { ReactQueryDevtools } from "react-query/devtools";
+import { lightTheme, darkTheme } from "./theme";
+import { darkMode } from "./reco";
+import { useRecoilValue } from "recoil";
+
 /**
  * GlobalStyle : Global style-component, 
  * it will go through the document and insert the styles to the head.
@@ -74,13 +78,18 @@ a {
   color:inherit;
 }
 `
-
 function App() {
+
+  // const toggleTheme = () => setTheme()
+  const dark = useRecoilValue(darkMode);
+
   return (
     <>
-      <GlobalStyle />
-      <Router />
-      <ReactQueryDevtools initialIsOpen={true} />
+      <ThemeProvider theme={dark ? darkTheme : lightTheme}>
+        <GlobalStyle />
+        <Router />
+        <ReactQueryDevtools initialIsOpen={true} />
+      </ThemeProvider>
     </>
   );
 }

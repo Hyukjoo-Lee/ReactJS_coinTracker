@@ -11,6 +11,7 @@
     "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "apexcharts": "^3.35.3",
+    "drkmd-js": "^1.0.12",
     "gh-pages": "^4.0.0",
     "moment-timezone": "^0.5.34",
     "react": "^18.2.0",
@@ -20,6 +21,7 @@
     "react-query": "^3.39.1",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "recoil": "^0.7.4",
     "styled-components": "^5.3.5",
     "typescript": "^4.7.4",
     "web-vitals": "^2.1.4"

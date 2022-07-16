@@ -3,40 +3,54 @@ import { fetchCoinHistory } from "./api";
 import ApexChart from "react-apexcharts";
 
 interface IHistorical {
-    time_open: string;
-    time_close: Date;
-    open: number;
-    high: number;
-    low: number;
-    close: number;
-    volume: number;
+    time_open: number;
+    time_close: number;
+    open: string;
+    high: string;
+    low: string;
+    close: string;
+    volume: string;
     market_cap: number;
 };
 
 interface ChartProps {
-    coinId?: string;
+    coinId: string;
 }
 
+interface ICandleChart {
+    x: Date;
+    y: number[];
+}
+
+
 function Chart({ coinId }: ChartProps) {
-    const { isLoading, data: historyData } = useQuery<IHistorical[]>
-        (["historyData", coinId],
-            () => fetchCoinHistory(coinId),
-            {
-                refetchInterval: 10000,
-            }
-        );
+    const { isLoading: historyLoading, data: historyData } = useQuery<
+        IHistorical[]
+    >(["history", coinId], () => fetchCoinHistory(coinId!), {
+        refetchInterval: 10000,
+    });
 
     return (
         <div>
-            {isLoading ? (
+            {historyLoading ? (
                 "Loading Chart..."
             ) : (
                 <ApexChart
-                    type="line"
+                    type="candlestick"
                     series={[
                         {
                             name: "Price",
-                            data: historyData?.map((price => price.close)) ?? [],
+                            data: historyData?.map((props) => {
+                                return {
+                                    x: new Date(props.time_open * 1000),
+                                    y: [
+                                        parseFloat(props.open),
+                                        parseFloat(props.high),
+                                        parseFloat(props.low),
+                                        parseFloat(props.close),
+                                    ],
+                                };
+                            }) as ICandleChart[],
                         },
                     ]}
                     options={{

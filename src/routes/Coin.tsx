@@ -66,6 +66,26 @@ const Tabs = styled.div`
     gap: 10px;
 `;
 
+const BtnContainer = styled.div`
+    display: flex;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+`;
+
+const Btn = styled.div`
+  border-radius: 50%;
+  color: white;
+  padding: 10px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+
+  &:hover, &:active {
+  color: ${props => props.theme.accentColor};
+}
+`;
+
 const Tab = styled.span<{ isActive: boolean }>`
   text-align: center ;
   text-transform: uppercase;
@@ -109,8 +129,7 @@ interface InfoData {
     last_data_at: string;
 }
 
-interface PriceData {
-
+export interface PriceData {
     id: string;
     name: string;
     symbol: string;
@@ -148,26 +167,26 @@ interface PriceData {
 // Fetcher function - key must be unique to be stored and operated properly in the react query cache system.
 function Coin() {
 
-
     // https://ohlcv-api.nomadcoders.workers.dev?coinId=btc-bitcoin
     const { coinId } = useParams();
     // Over react-router-dom v6, use as ...
     const { state } = useLocation() as LocationState;
     const priceMatch = useMatch(`/${coinId}/price`);
     const chartMatch = useMatch(`/${coinId}/chart`);
+
     const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>(
         ["infoData", coinId],
-        () => fetchCoinInfo(coinId),
+        () => fetchCoinInfo(coinId!),
         {
-            refetchInterval: 5000,
+            refetchInterval: 1000,
         }
     );
 
     const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
         ["tickers", coinId],
-        () => fetchCoinTickers(coinId),
+        () => fetchCoinTickers(coinId!),
         {
-            refetchInterval: 5000,
+            refetchInterval: 1000,
         }
     );
 
@@ -176,12 +195,12 @@ function Coin() {
     let update = tickersData?.last_updated;
     update = new Date();
 
-    const attachZero = (date: Date) => {
+    const makeTimeDetail = (date: Date) => {
 
         let arr = [];
         let hour = "";
         let min = "";
-        let sec = "";
+        let sec = ""; 
 
         if (date.getHours() < 10) { hour = "0" + date.getHours().toString(); } else { hour = date.getHours().toString(); };
         if (date.getMinutes() < 10) { min = "0" + date.getMinutes().toString(); } else { min = date.getMinutes().toString(); };
@@ -194,7 +213,7 @@ function Coin() {
         return arr;
     };
 
-    const time = attachZero(update);
+    const time = makeTimeDetail(update);
 
     const updateHour = time[0] + ":" + time[1] + ":" + time[2];
 
@@ -214,12 +233,13 @@ function Coin() {
             </Helmet>
             <Header>
                 <Title>
-                    {/* if there is a state, show the state's name 
-                     * OR 
-                     * if loading is in progress, show "Loading...", if not loading, show the name received from API 
-                     */}
                     {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
                 </Title>
+                <BtnContainer>
+                    <Link to={"/"}>
+                        <Btn>Home</Btn>
+                    </Link>
+                </BtnContainer>
             </Header>
             {loading ? (
                 "Loading..."
@@ -237,9 +257,7 @@ function Coin() {
                         </OverviewItem>
                         <OverviewItem>
                             <span>Price</span>
-                            {/* <span>{tickersData?.quotes.USD.price.toFixed(6)}</span> */}
-
-                            <span>To be fixed</span>
+                            <span>{tickersData?.quotes.USD.price.toFixed(3)}</span>
                         </OverviewItem>
                     </Overview>
                     <Description>{infoData?.description}</Description>
@@ -268,8 +286,8 @@ function Coin() {
                     </Tabs>
 
                     <Routes>
-                        <Route path="price" element={<Price />} />
-                        <Route path="chart" element={<Chart coinId={coinId} />} />
+                        <Route path="price" element={<Price coinId={coinId!} />} />
+                        <Route path="chart" element={<Chart coinId={coinId!} />} />
                     </Routes>
 
                 </>
