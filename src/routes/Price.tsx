@@ -8,10 +8,24 @@ interface PriceProps {
     coinId: string;
 }
 
-const Container = styled.div`
-    padding: 0px 20px;
+const Overviews = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+`;
+
+const OverviewItem = styled.div`
     width: 100%;
-    margin: 0 auto;
+    height: 30px;
+    background-color: ${props => props.theme.bgColor};
+    border: 2px solid ${props => props.theme.accentColor};
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 15px;
+    margin: 10px 0px;
+    padding: 20px;
 `;
 
 function Price({ coinId }: PriceProps) {
@@ -19,7 +33,7 @@ function Price({ coinId }: PriceProps) {
         ["tickers", coinId],
         () => fetchCoinTickers(coinId!),
         {
-            refetchInterval: 1000,
+            refetchInterval: 3000,
         }
     );
 
@@ -28,13 +42,36 @@ function Price({ coinId }: PriceProps) {
     }, []);
 
     return (
-        <Container>
-            <h3>Current Price: ${tickersData?.quotes.USD.price.toFixed(3)}</h3>
-            <h3>Change rate in 1 day: {tickersData?.quotes.USD.percent_change_24h.toFixed(2)}%</h3>
-            <h3>Change rate in 15 mins: {tickersData?.quotes.USD.percent_change_15m.toFixed(2)}%</h3>
-            <h3>Change rate in 30 mins: {tickersData?.quotes.USD.percent_change_30m.toFixed(2)}%</h3>
-            <h3>Change rate in 1 hour: {tickersData?.quotes.USD.percent_change_1h.toFixed(2)}%</h3>
-        </Container>
+        <Overviews>
+            <OverviewItem>
+                <span>Current Price</span>
+                <span>
+                    ${tickersData?.quotes.USD.price.toFixed(3)}
+                </span>
+            </OverviewItem>
+            <OverviewItem>
+                <span>Change rate in 1 day</span>
+                <span>{tickersData?.quotes.USD.percent_change_24h.toFixed(2)}%</span>
+            </OverviewItem>
+            <OverviewItem>
+                <span>Change rate in 15 mins</span>
+                <span>
+                    {tickersData?.quotes.USD.percent_change_15m.toFixed(2)}%
+                </span>
+            </OverviewItem>
+            <OverviewItem>
+                <span>Change rate in 30 mins</span>
+                <span>
+                    {tickersData?.quotes.USD.percent_change_30m.toFixed(2)}%
+                </span>
+            </OverviewItem>
+            <OverviewItem>
+                <span>Change rate in 1 hour</span>
+                <span>
+                    {tickersData?.quotes.USD.percent_change_1h.toFixed(2)}%
+                </span>
+            </OverviewItem>
+        </Overviews>
     );
 }
 
