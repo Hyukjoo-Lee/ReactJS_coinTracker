@@ -71,13 +71,14 @@ const BtnContainer = styled.div`
 const Btn = styled.div`
   border-radius: 50%;
   color: white;
-  padding: 10px 10px;
+  padding: 20px 20px;
   text-align: center;
   text-decoration: none;
   display: flex;
-
-  &:hover, &:active {
-  color: ${props => props.theme.accentColor};
+  border: none;      
+  &:hover {
+  background: rgb(0, 3, 255);
+  background: linear-gradient(0deg, rgba(0, 3, 255, 1) 0%, rgba(2, 126, 251, 1) 100%);
 }
 `;
 
@@ -195,7 +196,7 @@ function Coin() {
         let arr = [];
         let hour = "";
         let min = "";
-        let sec = ""; 
+        let sec = "";
 
         if (date.getHours() < 10) { hour = "0" + date.getHours().toString(); } else { hour = date.getHours().toString(); };
         if (date.getMinutes() < 10) { min = "0" + date.getMinutes().toString(); } else { min = date.getMinutes().toString(); };

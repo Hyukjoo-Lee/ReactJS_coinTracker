@@ -11,10 +11,10 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <div>
-      <RecoilRoot>
-        <QueryClientProvider client={queryClient}>
-          <App />
-        </QueryClientProvider>
-      </RecoilRoot>
+    <RecoilRoot>
+      <QueryClientProvider client={queryClient}>
+        <App />
+      </QueryClientProvider>
+    </RecoilRoot>
   </div>
 );
