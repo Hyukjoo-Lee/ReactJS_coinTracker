@@ -1,7 +1,6 @@
-import { useEffect } from "react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
-import { fetchCoinTickers } from "./api";
+import { fetchCoinTickers } from "../api";
 import { PriceData } from "./Coin";
 
 interface PriceProps {

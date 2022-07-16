@@ -4,7 +4,7 @@ import { Route, Routes, Outlet } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useLocation, useParams, useMatch } from "react-router-dom";
 import styled from "styled-components";
-import { fetchCoinInfo, fetchCoinTickers } from "./api";
+import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import Chart from "./Chart";
 import Price from "./Price";
 
@@ -281,8 +281,8 @@ function Coin() {
                     </Tabs>
 
                     <Routes>
-                        <Route path="price" element={<Price coinId={coinId!} />} />
-                        <Route path="chart" element={<Chart coinId={coinId!} />} />
+                        <Route path="/price" element={<Price coinId={coinId!} />} />
+                        <Route path="/chart" element={<Chart coinId={coinId!} />} />
                     </Routes>
 
                 </>
