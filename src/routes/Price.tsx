@@ -13,6 +13,7 @@ const Overviews = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    margin-bottom: 40px;
 `;
 
 const OverviewItem = styled.div`
@@ -37,42 +38,45 @@ function Price({ coinId }: PriceProps) {
         }
     );
 
-    useEffect(() => {
-        console.log(tickersData);
-    }, []);
-
     return (
-        <Overviews>
-            <OverviewItem>
-                <span>Current Price</span>
-                <span>
-                    ${tickersData?.quotes.USD.price.toFixed(3)}
-                </span>
-            </OverviewItem>
-            <OverviewItem>
-                <span>Change rate in 1 day</span>
-                <span>{tickersData?.quotes.USD.percent_change_24h.toFixed(2)}%</span>
-            </OverviewItem>
-            <OverviewItem>
-                <span>Change rate in 15 mins</span>
-                <span>
-                    {tickersData?.quotes.USD.percent_change_15m.toFixed(2)}%
-                </span>
-            </OverviewItem>
-            <OverviewItem>
-                <span>Change rate in 30 mins</span>
-                <span>
-                    {tickersData?.quotes.USD.percent_change_30m.toFixed(2)}%
-                </span>
-            </OverviewItem>
-            <OverviewItem>
-                <span>Change rate in 1 hour</span>
-                <span>
-                    {tickersData?.quotes.USD.percent_change_1h.toFixed(2)}%
-                </span>
-            </OverviewItem>
-        </Overviews>
-    );
+        <div>
+            {tickersLoading ? (
+                "Loading Information..."
+            ) : (
+                <Overviews>
+                    <OverviewItem>
+                        <span>Current Price</span>
+                        <span>
+                            ${tickersData?.quotes.USD.price.toFixed(3)}
+                        </span>
+                    </OverviewItem>
+                    <OverviewItem>
+                        <span>Change rate in 1 day</span>
+                        <span>{tickersData?.quotes.USD.percent_change_24h.toFixed(2)}%</span>
+                    </OverviewItem>
+                    <OverviewItem>
+                        <span>Change rate in 15 mins</span>
+                        <span>
+                            {tickersData?.quotes.USD.percent_change_15m.toFixed(2)}%
+                        </span>
+                    </OverviewItem>
+                    <OverviewItem>
+                        <span>Change rate in 30 mins</span>
+                        <span>
+                            {tickersData?.quotes.USD.percent_change_30m.toFixed(2)}%
+                        </span>
+                    </OverviewItem>
+                    <OverviewItem>
+                        <span>Change rate in 1 hour</span>
+                        <span>
+                            {tickersData?.quotes.USD.percent_change_1h.toFixed(2)}%
+                        </span>
+                    </OverviewItem>
+                </Overviews>
+            )
+            }
+        </div>
+    )
 }
 
 export default Price;

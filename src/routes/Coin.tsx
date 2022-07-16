@@ -28,11 +28,6 @@ const Title = styled.h1`
    color: ${props => props.theme.accentColor};
 `;
 
-const Loader = styled.span`
-    text-align: center;
-    display: block;
-`;
-
 const Overview = styled.div`
     display: flex;
     justify-content: space-between;
