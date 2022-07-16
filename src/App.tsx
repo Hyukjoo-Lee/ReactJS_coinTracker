@@ -2,8 +2,7 @@ import { createGlobalStyle, ThemeProvider } from "styled-components";
 import Router from "./Router";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { lightTheme, darkTheme } from "./theme";
-import { darkMode } from "./reco";
-import { useRecoilValue } from "recoil";
+import { useState } from "react";
 
 /**
  * GlobalStyle : Global style-component, 
@@ -79,12 +78,13 @@ a {
 `
 function App() {
 
-  // const toggleTheme = () => setTheme()
-  const dark = useRecoilValue(darkMode);
-
+  const [isDark, changeTheme] = useState(false);
+  const onClick = () => changeTheme((prev) => !prev);
+  
   return (
     <>
-      <ThemeProvider theme={dark ? darkTheme : lightTheme}>
+      <button onClick={onClick}>TOGGLE</button>
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <GlobalStyle />
         <Router />
         <ReactQueryDevtools initialIsOpen={true} />

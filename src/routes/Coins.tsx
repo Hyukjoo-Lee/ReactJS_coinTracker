@@ -19,9 +19,9 @@ const Header = styled.header`
 `;
 
 const Coin = styled.li`
-    background-color: white;
+     background-color: ${props => props.theme.btnColor};
     color: ${(props) => props.theme.bgColor};
-    border-radius: 15px;
+    border-radius: 20px;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
