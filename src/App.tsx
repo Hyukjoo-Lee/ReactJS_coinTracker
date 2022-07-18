@@ -1,8 +1,15 @@
-import { createGlobalStyle, ThemeProvider } from "styled-components";
+import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 import Router from "./Router";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { lightTheme, darkTheme } from "./theme";
 import { useState } from "react";
+import {
+  RecoilRoot,
+  atom,
+  selector,
+  useRecoilState,
+  useRecoilValue,
+} from 'recoil';
 
 /**
  * GlobalStyle : Global style-component, 
@@ -74,21 +81,39 @@ a {
   text-decoration: none;
   // Remove link's color
   color:inherit;
-}
-`
-function App() {
+}`
 
-  const [isDark, changeTheme] = useState(false);
-  const onClick = () => changeTheme((prev) => !prev);
-  
+const ToggleBtn = styled.button`
+  float: right;
+  background: none;
+  border: none;
+  display: flex;
+  top: 10px;
+
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+function App() {
+  const [isDark, setIsDark] = useState(false);
+
+  let darkThemeBtn = require(`./images/dark_theme.png`);
+  let lightThemeBtn = require(`./images/light_theme.png`);
+
+  const toggleDark = () => { setIsDark((prev) => !prev) };
+
+
   return (
     <>
-      <button onClick={onClick}>TOGGLE</button>
-      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <GlobalStyle />
-        <Router />
-        <ReactQueryDevtools initialIsOpen={true} />
-      </ThemeProvider>
+      <RecoilRoot>
+        <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+          <GlobalStyle />
+          {/* 1. Send toggle Dark function to the Router */}
+          <Router isDark={isDark} toggleDark={toggleDark}/> 
+          <ReactQueryDevtools initialIsOpen={true} />
+        </ThemeProvider>
+      </RecoilRoot>
     </>
   );
 }

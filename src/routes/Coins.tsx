@@ -49,6 +49,19 @@ const Title = styled.h1`
    color: ${props => props.theme.accentColor};
 `;
 
+
+const Loader = styled.span`
+    text-align: center;
+    display: block;
+    `;
+
+const Img = styled.img`
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    margin-left: 20px;
+    `;
+
 interface ICoin {
     id: string,
     name: string,
@@ -59,22 +72,14 @@ interface ICoin {
     type: string,
 }
 
-const Loader = styled.span`
-    text-align: center;
-    display: block;
-`;
-
-const Img = styled.img`
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-    margin-left: 20px;
-`;
+interface ICoinsProps {
+    toggleDark: () => void;
+}
 
 /**
  * Sending the state to path (behind the scene data)
  */
-function Coins() {
+function Coins({toggleDark}: ICoinsProps) {
 
     /* useQuery hook is going to call your fetchCoin function,
     when fetcher function is loading, react query will let you know 'isLoading(boolean)'
@@ -91,6 +96,7 @@ function Coins() {
             </Helmet>
             <Header>
                 <Title>Coin</Title>
+                <button onClick={toggleDark}>Toggle Dark Mode</button>
             </Header>
             {isLoading ? (
                 <Loader>"Loading..."</Loader>

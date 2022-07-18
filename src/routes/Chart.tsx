@@ -15,6 +15,7 @@ interface IHistorical {
 
 interface ChartProps {
     coinId: string;
+    isDark: boolean;
 }
 
 interface ICandleChart {
@@ -22,8 +23,7 @@ interface ICandleChart {
     y: number[];
 }
 
-
-function Chart({ coinId }: ChartProps) {
+function Chart({ coinId, isDark }: ChartProps) {
     const { isLoading: historyLoading, data: historyData } = useQuery<
         IHistorical[]
     >(["history", coinId], () => fetchCoinHistory(coinId!), {
@@ -55,7 +55,7 @@ function Chart({ coinId }: ChartProps) {
                     ]}
                     options={{
                         theme: {
-                            mode: "dark",
+                            mode: isDark? "dark" : "light",
                         },
                         chart: {
                             toolbar: {

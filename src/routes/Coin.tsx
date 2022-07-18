@@ -31,7 +31,7 @@ const Title = styled.h1`
 const Overview = styled.div`
     display: flex;
     justify-content: space-between;
-    background-color: black;
+    background-color: ${(props) => props.theme.overViewColor};
     padding: 10px 20px;
     border-radius: 10px;
 `;
@@ -40,7 +40,7 @@ const OverviewItem = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    color: #00a8ff;
+    color:  ${(props) => props.theme.textColor};
 
     span:first-child {
         font-size: 10px;
@@ -51,6 +51,7 @@ const OverviewItem = styled.div`
 `;
 
 const Description = styled.p`
+    color: ${(props) => props.theme.overViewColor};
     margin: 20px 0px;
 `;
 
@@ -61,39 +62,31 @@ const Tabs = styled.div`
     gap: 10px;
 `;
 
-const BtnContainer = styled.div`
-    display: flex;
-    position: fixed;
-    top: 20px;
-    left: 20px;
-`;
-
-const Btn = styled.div`
-  border-radius: 50%;
-  color: white;
-  padding: 20px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: flex;
-  border: none;      
-  &:hover {
-  background: rgb(0, 3, 255);
-  background: linear-gradient(0deg, rgba(0, 3, 255, 1) 0%, rgba(2, 126, 251, 1) 100%);
-}
-`;
-
 const Tab = styled.span<{ isActive: boolean }>`
   text-align: center ;
   text-transform: uppercase;
   font-size: 12px;
   font-weight: 400;
-  background-color: rgba(0,0,0,0.5);
+  background-color: ${(props) => props.theme.overViewColor};
   padding: 7px 0px;
   border-radius: 10px;
   color: ${props => props.isActive ? props.theme.accentColor : props.theme.textColor};
 
   a {
     display:block;
+  }
+`;
+
+const HomeBtn = styled.button`
+  background: none;
+  border: none;
+  display: flex;
+  position: fixed;
+  top: 10px;
+  left: 10px;
+
+  &:hover {
+    cursor: pointer;
   }
 `;
 
@@ -159,9 +152,13 @@ export interface PriceData {
     };
 }
 
+interface ICoinProp {
+    isDark: boolean;
+}
+
 // Caching React query devtools: 캐쉬에 데이터가 어떤것들이 있는지, Show data explorer
 // Fetcher function - key must be unique to be stored and operated properly in the react query cache system.
-function Coin() {
+function Coin({isDark} : ICoinProp) {
 
     // https://ohlcv-api.nomadcoders.workers.dev?coinId=btc-bitcoin
     const { coinId } = useParams();
@@ -219,9 +216,16 @@ function Coin() {
         update.getMonth() + 1
     )) + "/" + update.getDate() + "/" + update.getFullYear();
 
+    let homeBtn = require(`../images/homeBtn.png`);
 
     return (
         <Container>
+            <HomeBtn>
+                {}
+                <Link to={"/"}>
+                    <img src={homeBtn} width="40px"></img>
+                </Link>
+            </HomeBtn>
             <Helmet>
                 <title>
                     {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
@@ -231,11 +235,6 @@ function Coin() {
                 <Title>
                     {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
                 </Title>
-                <BtnContainer>
-                    <Link to={"/"}>
-                        <Btn>Home</Btn>
-                    </Link>
-                </BtnContainer>
             </Header>
             {loading ? (
                 "Loading..."
@@ -283,7 +282,7 @@ function Coin() {
 
                     <Routes>
                         <Route path="/price" element={<Price coinId={coinId!} />} />
-                        <Route path="/chart" element={<Chart coinId={coinId!} />} />
+                            <Route path="/chart" element={<Chart coinId={coinId!} isDark={isDark} />} />
                     </Routes>
 
                 </>

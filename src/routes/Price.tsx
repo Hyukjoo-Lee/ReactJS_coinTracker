@@ -18,8 +18,8 @@ const Overviews = styled.div`
 const OverviewItem = styled.div`
     width: 100%;
     height: 30px;
-    background-color: ${props => props.theme.bgColor};
-    border: 2px solid ${props => props.theme.accentColor};
+    background-color: ${props => props.theme.overViewColor};
+    border: 2px solid ${props => props.theme.bgColor};
     display: flex;
     justify-content: space-between;
     align-items: center;
