@@ -5,6 +5,7 @@ import { PriceData } from "./Coin";
 
 interface PriceProps {
     coinId: string;
+    growth?: number;
 }
 
 const Overviews = styled.div`
@@ -34,11 +35,23 @@ const OverviewItem = styled.div`
     }
 
     span:nth-child(2) {
-        font-weight: bold;
-        text-transform: uppercase;
-        color: ${props => props.theme.accentColor};
+    font-size: 20px;
+    font-weight: 400;
     }
 `;
+
+const Percentage = styled.span<{ isPositive?: Boolean }>`
+  font-size: 20px;
+  font-weight: 400;
+  color: ${props => props.isPositive ? "#4cd137" : "tomato"};
+`;
+
+const checkGrowth = (growth: number | undefined) => {
+    if (growth) {
+        return growth > 0;
+    }
+}
+
 
 function Price({ coinId }: PriceProps) {
     const { isLoading: tickersLoading, data: tickersData } = useQuery<PriceData>(
@@ -57,31 +70,33 @@ function Price({ coinId }: PriceProps) {
                 <Overviews>
                     <OverviewItem>
                         <span>Current Price</span>
-                        <span>
-                            ${tickersData?.quotes.USD.price.toFixed(3)}
-                        </span>
+                        <Percentage isPositive={true}>
+                            $ {tickersData?.quotes.USD.price.toFixed(3)}
+                        </Percentage>
                     </OverviewItem>
                     <OverviewItem>
                         <span>Change rate in 1 day</span>
-                        <span>{tickersData?.quotes.USD.percent_change_24h.toFixed(2)}%</span>
+                        <Percentage isPositive={true}>
+                            {tickersData?.quotes.USD.percent_change_24h.toFixed(3)} %
+                        </Percentage>
                     </OverviewItem>
                     <OverviewItem>
                         <span>Change rate in 15 mins</span>
-                        <span>
-                            {tickersData?.quotes.USD.percent_change_15m.toFixed(2)}%
-                        </span>
+                        <Percentage isPositive={checkGrowth(tickersData?.quotes.USD.percent_change_15m) === true} >
+                            {tickersData?.quotes.USD.percent_change_15m.toFixed(3)} %
+                        </Percentage>
                     </OverviewItem>
                     <OverviewItem>
                         <span>Change rate in 30 mins</span>
-                        <span>
-                            {tickersData?.quotes.USD.percent_change_30m.toFixed(2)}%
-                        </span>
+                        <Percentage isPositive={checkGrowth(tickersData?.quotes.USD.percent_change_30m) === true} >
+                            {tickersData?.quotes.USD.percent_change_30m.toFixed(3)} %
+                        </Percentage>
                     </OverviewItem>
                     <OverviewItem>
                         <span>Change rate in 1 hour</span>
-                        <span>
-                            {tickersData?.quotes.USD.percent_change_1h.toFixed(2)}%
-                        </span>
+                        <Percentage isPositive={checkGrowth(tickersData?.quotes.USD.percent_change_1h) === true} >
+                            {tickersData?.quotes.USD.percent_change_1h.toFixed(3)} %
+                        </Percentage>
                     </OverviewItem>
                 </Overviews>
             )
