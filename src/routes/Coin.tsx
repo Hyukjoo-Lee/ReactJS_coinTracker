@@ -10,7 +10,6 @@ import Price from "./Price";
 
 const Container = styled.div`
     padding: 0px 20px;
-    // 화면을 크게 했을 때, 모바일 화면처럼 웹 prop 들을 가운데에 위치 시킴
     max-width: 480px;
     margin: 0 auto;
 `;
@@ -24,6 +23,7 @@ const Header = styled.header`
 `;
 
 const Title = styled.h1`
+   position: absolute;
    font-size: 48px;
    color: ${props => props.theme.accentColor};
 `;
@@ -81,13 +81,15 @@ const HomeBtn = styled.button`
   background: none;
   border: none;
   display: flex;
-  position: fixed;
-  top: 10px;
-  left: 10px;
-
+  margin-right: auto;
   &:hover {
     cursor: pointer;
   }
+
+  img {
+    width: 50px;
+  }
+  
 `;
 
 interface LocationState {
@@ -153,16 +155,12 @@ export interface PriceData {
 }
 
 interface ICoinProp {
-    isDark: boolean;
+
 }
 
-// Caching React query devtools: 캐쉬에 데이터가 어떤것들이 있는지, Show data explorer
-// Fetcher function - key must be unique to be stored and operated properly in the react query cache system.
-function Coin({isDark} : ICoinProp) {
+function Coin({ }: ICoinProp) {
 
-    // https://ohlcv-api.nomadcoders.workers.dev?coinId=btc-bitcoin
     const { coinId } = useParams();
-    // Over react-router-dom v6, use as ...
     const { state } = useLocation() as LocationState;
     const priceMatch = useMatch(`/${coinId}/price`);
     const chartMatch = useMatch(`/${coinId}/chart`);
@@ -220,18 +218,18 @@ function Coin({isDark} : ICoinProp) {
 
     return (
         <Container>
-            <HomeBtn>
-                {}
-                <Link to={"/"}>
-                    <img src={homeBtn} width="40px"></img>
-                </Link>
-            </HomeBtn>
             <Helmet>
                 <title>
                     {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
                 </title>
             </Helmet>
             <Header>
+                <HomeBtn>
+                    { }
+                    <Link to={"/"}>
+                        <img src={homeBtn} />
+                    </Link>
+                </HomeBtn>
                 <Title>
                     {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
                 </Title>
@@ -282,7 +280,7 @@ function Coin({isDark} : ICoinProp) {
 
                     <Routes>
                         <Route path="/price" element={<Price coinId={coinId!} />} />
-                            <Route path="/chart" element={<Chart coinId={coinId!} isDark={isDark} />} />
+                        <Route path="/chart" element={<Chart coinId={coinId!} />} />
                     </Routes>
 
                 </>

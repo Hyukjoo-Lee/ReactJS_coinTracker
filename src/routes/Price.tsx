@@ -26,6 +26,18 @@ const OverviewItem = styled.div`
     border-radius: 15px;
     margin: 10px 0px;
     padding: 20px;
+
+    span:nth-child(1) {
+        font-size: 12px;
+        text-transform: uppercase;
+        color: ${props => props.theme.textColor};
+    }
+
+    span:nth-child(2) {
+        font-weight: bold;
+        text-transform: uppercase;
+        color: ${props => props.theme.accentColor};
+    }
 `;
 
 function Price({ coinId }: PriceProps) {

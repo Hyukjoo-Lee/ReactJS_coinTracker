@@ -1,12 +1,13 @@
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { fetchCoin } from "../api";
+import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
     padding: 0px 20px;
-    // 화면을 크게 했을 때, 모바일 화면처럼 웹 prop 들을 가운데에 위치 시킴
     max-width: 480px;
     margin: 0 auto;
 `;
@@ -14,8 +15,13 @@ const Container = styled.div`
 const Header = styled.header`
     height: 10vh;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+`;
+
+const CoinsList = styled.ul`
+
 `;
 
 const Coin = styled.li`
@@ -29,7 +35,6 @@ const Coin = styled.li`
     a {
         display: block;
         transition: color 0.3s ease-in;
-        // Make clickable til whole card space.
         padding: 20px;
     }
 
@@ -40,11 +45,8 @@ const Coin = styled.li`
     }
 `;
 
-const CoinsList = styled.ul`
-
-`;
-
 const Title = styled.h1`
+   position: absolute;
    font-size: 48px;
    color: ${props => props.theme.accentColor};
 `;
@@ -62,6 +64,22 @@ const Img = styled.img`
     margin-left: 20px;
     `;
 
+
+const ToggleBtn = styled.button`
+  display: flex;
+  background: none;
+  border: none;
+  margin-left: auto;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  img {
+    width: 90px;
+  }
+`;
+
 interface ICoin {
     id: string,
     name: string,
@@ -73,19 +91,23 @@ interface ICoin {
 }
 
 interface ICoinsProps {
-    toggleDark: () => void;
 }
 
-/**
- * Sending the state to path (behind the scene data)
- */
-function Coins({toggleDark}: ICoinsProps) {
+function Coins({ }: ICoinsProps) {
 
-    /* useQuery hook is going to call your fetchCoin function,
-    when fetcher function is loading, react query will let you know 'isLoading(boolean)'
-    when fetcher function is done, react query is going to put json into 'data'  */
-    // Also react query keeps data in cache.
     const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoin);
+
+    const setDarkAtom = useSetRecoilState(isDarkAtom);
+    const isDark = useRecoilValue(isDarkAtom);
+
+    const toggleDarkAtom = () => {
+        setDarkAtom((prev) => !prev);
+        console.log(isDarkAtom);
+        console.log(isDark);
+    }
+
+    let darkThemeBtn = require(`../images/dark_theme.png`);
+    let lightThemeBtn = require(`../images/light_theme.png`);
 
     return (
         <Container>
@@ -96,7 +118,7 @@ function Coins({toggleDark}: ICoinsProps) {
             </Helmet>
             <Header>
                 <Title>Coin</Title>
-                <button onClick={toggleDark}>Toggle Dark Mode</button>
+                <ToggleBtn onClick={toggleDarkAtom}><img src={isDark ? darkThemeBtn : lightThemeBtn}></img></ToggleBtn>
             </Header>
             {isLoading ? (
                 <Loader>"Loading..."</Loader>
@@ -117,7 +139,3 @@ function Coins({toggleDark}: ICoinsProps) {
 }
 
 export default Coins;
-
-// 1. Allow people go back to back (mae)
-// 2. Could be able to look more thing about the price
-// 3. Chart => Candle stickchards

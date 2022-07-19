@@ -3,7 +3,7 @@ import { DefaultTheme } from "styled-components";
 export const lightTheme: DefaultTheme = {
     bgColor: "whitesmoke",
     textColor: "#00a8ff",
-    accentColor: "#00a8ff",
+    accentColor: "tomato",
     overViewColor: "black",
     btnColor: "black",
 }
