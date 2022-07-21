@@ -76,7 +76,7 @@ function Price({ coinId }: PriceProps) {
                     </OverviewItem>
                     <OverviewItem>
                         <span>Change rate in 1 day</span>
-                        <Percentage isPositive={true}>
+                            <Percentage isPositive={checkGrowth(tickersData?.quotes.USD.percent_change_24h) === true}>
                             {tickersData?.quotes.USD.percent_change_24h.toFixed(3)} %
                         </Percentage>
                     </OverviewItem>

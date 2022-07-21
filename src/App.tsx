@@ -1,12 +1,8 @@
-import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
 import Router from "./Router";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { lightTheme, darkTheme } from "./theme";
 import {
-  RecoilRoot,
-  atom,
-  selector,
-  useRecoilState,
   useRecoilValue,
 } from 'recoil';
 import { isDarkAtom } from "./atoms";

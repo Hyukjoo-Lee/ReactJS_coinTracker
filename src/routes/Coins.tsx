@@ -20,12 +20,12 @@ const Header = styled.header`
     margin-bottom: 20px;
 `;
 
-const CoinsList = styled.ul`
+const CoinsList = styled.div`
 
 `;
 
 const Coin = styled.li`
-     background-color: ${props => props.theme.btnColor};
+    background-color: ${props => props.theme.btnColor};
     color: ${(props) => props.theme.bgColor};
     border-radius: 20px;
     margin-bottom: 10px;
