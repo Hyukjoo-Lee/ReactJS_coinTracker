@@ -1,17 +1,17 @@
 import { useQuery } from "react-query";
 import { fetchCoinHistory } from "../api";
-import ApexChart from "react-apexcharts";
+import ReactApexChart from "react-apexcharts";
 import { useRecoilValue } from "recoil";
 import { isDarkAtom } from "../atoms";
 
 interface IHistorical {
     time_open: number;
-    time_close: number;
-    open: string;
-    high: string;
-    low: string;
-    close: string;
-    volume: string;
+    time_close: string;
+    open: number;
+    high: number;
+    low: number;
+    close: number;
+    volume: number;
     market_cap: number;
 };
 
@@ -38,66 +38,63 @@ function Chart({ coinId }: ChartProps) {
             {historyLoading ? (
                 "Loading Chart..."
             ) : (
-                <ApexChart
-                    type="line"
+                <ReactApexChart
+                    type="candlestick"
                     series={[
                         {
                             name: "Price",
-                            data: historyData?.map((props) => {
-                                return {
-                                    x: new Date(props.time_open * 1000),
-                                    y: [
-                                        parseFloat(props.close),
-                                    ],
-                                };
-                            }) as ILineChart[],
-                        },
+                            data: historyData!.slice(0).reverse().map(historyData => (
+                                {
+                                    x: new Date(historyData.time_open * 1000),
+                                    y: [historyData.open, historyData.high, historyData.low, historyData.close],
+                                }
+                            )),
+                        }
                     ]}
                     options={{
                         theme: {
-                            mode: isDark ? "dark" : "light",
+                            mode: 'dark',
                         },
-                        chart: {
-                            toolbar: {
-                                show: false,
+                        plotOptions: {
+                            candlestick: {
+                                colors: {
+                                    upward: "#c0392b",
+                                    downward: "#2980b9",
+                                },
                             },
-                            height: 300,
-                            width: 500,
-                            background: "transparent",
-                        },
-                        grid: { show: false },
-                        stroke: { curve: "smooth", width: 4 },
-                        yaxis: {
-                            show: false,
                         },
                         xaxis: {
+                            type: "datetime",
                             labels: {
                                 show: false,
                             },
-                            axisTicks: { show: false },
-                            axisBorder: { show: false },
-                            type: 'datetime',
-                            categories: historyData?.map((price => price.time_close)) ?? [],
+                            axisBorder: {
+                                show: false,
+                            },
+                            axisTicks: {
+                                show: false,
+                            },
+
                         },
-                        fill: {
-                            type: "gradient",
-                            gradient: {
-                                gradientToColors: ["green"],
-                                stops: [0, 100]
+                        grid: { show: false },
+                        yaxis: {
+                            tooltip: {
+                                enabled: false
                             },
                         },
-                        colors: ["#e84118"],
                         tooltip: {
-                            y: {
-                                formatter: (value) => `$${value.toFixed(1)}`,
-                            }
+                            x: {
+                                formatter: (val) => (new Date(val)).toLocaleDateString(),
+                            },
                         }
                     }}
                 />
             )
             }
+
         </div>
-    )
+
+    );
 }
 
 export default Chart;

@@ -22,7 +22,7 @@ const Header = styled.header`
     margin-bottom: 10px;
 `;
 
-const Title = styled.h2`
+const Title = styled.h1`
    position: absolute;
    font-size: 32px;
    color: ${props => props.theme.accentColor};
@@ -108,7 +108,7 @@ interface InfoData {
     is_new: boolean;
     is_active: boolean;
     type: string;
-    description: string;
+    description?: string;
     message: string;
     open_source: boolean;
     started_at: string;
@@ -251,10 +251,10 @@ function Coin({ }: ICoinProp) {
                         </OverviewItem>
                         <OverviewItem>
                             <span>Price</span>
-                            <span>{tickersData?.quotes.USD.price.toFixed(3)}</span>
+                            <span>{tickersData?.quotes.USD.price.toFixed(10)}</span>
                         </OverviewItem>
-                    </Overview>
-                    <Description>{infoData?.description}</Description>
+                        </Overview>
+                        <Description>{infoData!.description!.length > 233 ? `${infoData!.description!.slice(0, 233)}...` : infoData?.description}</Description>
                     <Overview>
                         <OverviewItem>
                             <span>Total Supply</span>
