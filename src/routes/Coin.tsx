@@ -19,12 +19,12 @@ const Header = styled.header`
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 `;
 
-const Title = styled.h1`
+const Title = styled.h2`
    position: absolute;
-   font-size: 48px;
+   font-size: 32px;
    color: ${props => props.theme.accentColor};
 `;
 
@@ -82,6 +82,7 @@ const HomeBtn = styled.button`
   border: none;
   display: flex;
   margin-right: auto;
+  margin-top: 5px;
   &:hover {
     cursor: pointer;
   }

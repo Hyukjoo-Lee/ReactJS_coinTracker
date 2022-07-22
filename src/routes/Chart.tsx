@@ -19,7 +19,7 @@ interface ChartProps {
     coinId: string;
 }
 
-interface ICandleChart {
+interface ILineChart {
     x: Date;
     y: number[];
 }
@@ -39,7 +39,7 @@ function Chart({ coinId }: ChartProps) {
                 "Loading Chart..."
             ) : (
                 <ApexChart
-                    type="candlestick"
+                    type="line"
                     series={[
                         {
                             name: "Price",
@@ -47,13 +47,10 @@ function Chart({ coinId }: ChartProps) {
                                 return {
                                     x: new Date(props.time_open * 1000),
                                     y: [
-                                        parseFloat(props.open),
-                                        parseFloat(props.high),
-                                        parseFloat(props.low),
                                         parseFloat(props.close),
                                     ],
                                 };
-                            }) as ICandleChart[],
+                            }) as ILineChart[],
                         },
                     ]}
                     options={{
