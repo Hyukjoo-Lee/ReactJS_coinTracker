@@ -1,7 +1,6 @@
 import { useQuery } from "react-query";
 import { fetchCoinHistory } from "../api";
 import ReactApexChart from "react-apexcharts";
-import toast from "react-hot-toast";
 
 interface IHistorical {
   time_open: number;
