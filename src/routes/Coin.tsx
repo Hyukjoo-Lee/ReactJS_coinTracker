@@ -9,7 +9,7 @@ import Chart from "./Chart";
 import Price from "./Price";
 
 const Container = styled.div`
-  padding: 0px 20px;
+  padding: 20px;
   max-width: 480px;
   margin: 0 auto;
 `;
