@@ -7,8 +7,8 @@ import { fetchCoin } from "../api";
 import { isDarkAtom } from "../atoms";
 
 const Container = styled.div`
-  padding: 0px 20px;
-  max-width: 480px;
+  padding: 20px;
+  max-width: fit-content;
   margin: 0 auto;
 `;
 
@@ -20,15 +20,20 @@ const Header = styled.header`
   margin-bottom: 10px;
 `;
 
-const CoinsList = styled.div``;
+const CoinsList = styled.div`
+  display: grid;
+
+  grid-template-columns: repeat(4, 100px);
+`;
 
 const Coin = styled.li`
   background-color: ${(props) => props.theme.btnColor};
   color: ${(props) => props.theme.bgColor};
-  border-radius: 20px;
+  border-radius: 100%;
   margin-bottom: 10px;
   display: flex;
   align-items: center;
+  justify-content: center;
 
   a {
     display: block;
@@ -54,11 +59,9 @@ const Loader = styled.span`
   display: block;
 `;
 
-const Img = styled.img`
-  width: 30px;
-  height: 30px;
-  margin-right: 10px;
-  margin-left: 20px;
+const Image = styled.img`
+  width: 50px;
+  height: 50px;
 `;
 
 const ToggleBtn = styled.button`
@@ -119,12 +122,11 @@ function Coins() {
         <CoinsList>
           {data?.slice(0, 100).map((coin) => (
             <Coin key={coin.id}>
-              <Img
-                src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
-                alt="Coin Symbol"
-              />
               <Link to={`/${coin.id}`} state={coin}>
-                {coin.name} &rarr;
+                <Image
+                  src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
+                  alt="Coin Symbol"
+                />
               </Link>
             </Coin>
           ))}
