@@ -6,34 +6,27 @@ import { useLocation, useParams, useMatch } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
 import Chart from "./Chart";
+import {
+  CoinListContainer,
+  Description,
+  Header,
+  SubDescription,
+  Title,
+} from "./Coins";
 import Price from "./Price";
 
 const Container = styled.div`
-  padding: 20px;
-  max-width: 480px;
-  margin: 0 auto;
-`;
-
-const Header = styled.header`
-  height: 10vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 10px;
-`;
-
-const Title = styled.h1`
-  position: absolute;
-  font-size: 32px;
-  color: ${(props) => props.theme.accentColor};
+  padding-top: 10vh;
+  width: 70%;
 `;
 
 const Overview = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   background-color: ${(props) => props.theme.overViewColor};
-  padding: 10px 20px;
+  padding: 20px 10px;
   border-radius: 10px;
+  margin-bottom: 30px;
 `;
 
 const OverviewItem = styled.div`
@@ -43,16 +36,18 @@ const OverviewItem = styled.div`
   color: ${(props) => props.theme.textColor};
 
   span:first-child {
-    font-size: 10px;
+    font-size: 17px;
     font-weight: 400;
     text-transform: uppercase;
     margin-bottom: 5px;
   }
-`;
 
-const Description = styled.p`
-  color: ${(props) => props.theme.overViewColor};
-  margin: 20px 0px;
+  span:nth-child(2) {
+    font-size: 15px;
+    font-weight: 300;
+    text-transform: uppercase;
+    margin-top: 5px;
+  }
 `;
 
 const Tabs = styled.div`
@@ -65,7 +60,7 @@ const Tabs = styled.div`
 const Tab = styled.span<{ isActive: boolean }>`
   text-align: center;
   text-transform: uppercase;
-  font-size: 12px;
+  font-size: 17px;
   font-weight: 500;
   background-color: ${(props) => props.theme.overViewColor};
   padding: 7px 0px;
@@ -227,13 +222,13 @@ function Coin() {
   let homeBtn = require(`../images/homeBtn.png`);
 
   return (
-    <Container>
-      <Helmet>
-        <title>
-          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
-        </title>
-      </Helmet>
+    <>
       <Header>
+        <Helmet>
+          <Title>
+            {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+          </Title>
+        </Helmet>
         <HomeBtn>
           {}
           <Link to={"/"}>
@@ -243,60 +238,64 @@ function Coin() {
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
+        <Description>
+          Click the PRICE or CHART button in order to see details of <></>"
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}"
+        </Description>
+        <SubDescription>
+          Click the HOME button if you want to browse another cryptocurrency.
+        </SubDescription>
       </Header>
-      {loading ? (
-        "Loading..."
-      ) : (
-        <>
-          <Outlet />
-          <Overview>
-            <OverviewItem>
-              <span>Rank</span>
-              <span>{infoData?.rank}</span>
-            </OverviewItem>
-            <OverviewItem>
-              <span>Symbol</span>
-              <span>{infoData?.symbol}</span>
-            </OverviewItem>
-            <OverviewItem>
-              <span>Price</span>
-              <span>{tickersData?.quotes.USD.price.toFixed(10)}</span>
-            </OverviewItem>
-          </Overview>
-          <Description>
-            {infoData!.description!.length > 233
-              ? `${infoData!.description!.slice(0, 233)}...`
-              : infoData?.description}
-          </Description>
-          <Overview>
-            <OverviewItem>
-              <span>Total Supply</span>
-              <span>{tickersData?.total_supply}</span>
-            </OverviewItem>
-            <OverviewItem>
-              <span>Last Update (PDT)</span>
-              <span>
-                {updateHour} {updateDate}
-              </span>
-            </OverviewItem>
-          </Overview>
+      <CoinListContainer>
+        {loading ? (
+          "Loading..."
+        ) : (
+          <Container>
+            <Outlet />
+            <Overview>
+              <OverviewItem>
+                <span>Rank</span>
+                <span>{infoData?.rank}</span>
+              </OverviewItem>
+              <OverviewItem>
+                <span>Symbol</span>
+                <span>{infoData?.symbol}</span>
+              </OverviewItem>
+              <OverviewItem>
+                <span>Price</span>
+                <span>{tickersData?.quotes.USD.price.toFixed(10)}</span>
+              </OverviewItem>
+            </Overview>
+            <Overview>
+              <OverviewItem>
+                <span>Total Supply</span>
+                <span>{tickersData?.total_supply}</span>
+              </OverviewItem>
+              <OverviewItem>
+                <span>Last Update (PDT)</span>
+                <span>
+                  {updateHour} {updateDate}
+                </span>
+              </OverviewItem>
+            </Overview>
 
-          <Tabs>
-            <Tab isActive={chartMatch !== null}>
-              <Link to={`/${coinId}/chart`}>Chart</Link>
-            </Tab>
-            <Tab isActive={priceMatch !== null}>
-              <Link to={`/${coinId}/price`}>Price</Link>
-            </Tab>
-          </Tabs>
+            <Tabs>
+              <Tab isActive={chartMatch !== null}>
+                <Link to={`/${coinId}/chart`}>Chart</Link>
+              </Tab>
+              <Tab isActive={priceMatch !== null}>
+                <Link to={`/${coinId}/price`}>Price</Link>
+              </Tab>
+            </Tabs>
 
-          <Routes>
-            <Route path="/price" element={<Price coinId={coinId!} />} />
-            <Route path="/chart" element={<Chart coinId={coinId!} />} />
-          </Routes>
-        </>
-      )}
-    </Container>
+            <Routes>
+              <Route path="/price" element={<Price coinId={coinId!} />} />
+              <Route path="/chart" element={<Chart coinId={coinId!} />} />
+            </Routes>
+          </Container>
+        )}
+      </CoinListContainer>
+    </>
   );
 }
 

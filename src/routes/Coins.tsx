@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { fetchCoin } from "../api";
 import { isDarkAtom } from "../atoms";
 
-const Header = styled.header`
+export const Header = styled.header`
   position: fixed;
   top: 0;
   left: 0;
@@ -20,35 +20,38 @@ const Header = styled.header`
   color: #e6463c;
 `;
 
-const Title = styled.h1`
-  font-size: 72px;
+export const Title = styled.h3`
+  width: 70%;
+  font-size: 3.5em;
   text-transform: uppercase;
   letter-spacing: 5px;
-  width: 50%;
 `;
 
-const Description = styled.h3`
+export const Description = styled.h3`
+  display: inline-block;
   width: 70%;
-  font-size: 1.6em;
+  font-size: 1.1em;
   font-weight: 300;
   line-height: 1.1;
 `;
 
-const SubDescription = styled.p`
+export const SubDescription = styled.p`
   width: 70%;
   line-height: 1.1;
   font-weight: 400;
-  font-size: 17px;
+  font-size: 18px;
   margin-bottom: 40px;
   color: #2b2b2b;
 `;
 
-const CoinListContainer = styled.main`
+export const CoinListContainer = styled.main`
   margin-top: 20px;
-  height: auto;
-  display: flex;
+  min-height: auto;
+  max-height: 1000vh;
+  align-content: center;
   justify-content: center;
-  align-items: center;
+
+  display: flex;
   margin-left: 40%;
   background-color: transparent;
 `;
@@ -56,7 +59,7 @@ const CoinListContainer = styled.main`
 const CoinsList = styled.ul`
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-content: center;
   justify-content: center;
   grid-template-columns: repeat(8, 90px);
 `;
@@ -150,12 +153,13 @@ function Coins() {
         </ToggleBtn>
         <Title>Coin Tracker</Title>
         <Description>
-          The Coin Tracker to help you see short-term changes of top 100
-          cryptocurrency. Note that it shows always-up-to-date cryptocurrency
-          information, fast and useful.
+          Our Coin Tracker that helps you browse short-term changes of top 100
+          cryptocurrency. <br />
+          <br /> Note that we show you always-up-to-date cryptocurrency
+          information.
         </Description>
         <SubDescription>
-          Click the coin symbol to track the current updated information through
+          Click a coin symbol to track the current updated information through
           charts and price changes.
         </SubDescription>
       </Header>
