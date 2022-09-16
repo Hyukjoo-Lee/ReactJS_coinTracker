@@ -6,51 +6,84 @@ import styled from "styled-components";
 import { fetchCoin } from "../api";
 import { isDarkAtom } from "../atoms";
 
-const Container = styled.div`
-  padding: 20px;
-  max-width: fit-content;
-  margin: 0 auto;
+const Header = styled.header`
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: white;
+  width: 40%;
+  height: 100%;
+  padding: 0 0 30px 72px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  color: #e6463c;
 `;
 
-const Header = styled.header`
-  height: 10vh;
+const Title = styled.h1`
+  font-size: 72px;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  width: 50%;
+`;
+
+const Description = styled.h3`
+  width: 70%;
+  font-size: 1.6em;
+  font-weight: 300;
+  line-height: 1.1;
+`;
+
+const SubDescription = styled.p`
+  width: 70%;
+  line-height: 1.1;
+  font-weight: 400;
+  font-size: 17px;
+  margin-bottom: 40px;
+  color: #2b2b2b;
+`;
+
+const CoinListContainer = styled.main`
+  margin-top: 20px;
+  height: auto;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: 40%;
+  background-color: transparent;
+`;
+
+const CoinsList = styled.ul`
+  display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  margin-bottom: 10px;
-`;
-
-const CoinsList = styled.div`
-  display: grid;
-
-  grid-template-columns: repeat(4, 100px);
+  grid-template-columns: repeat(8, 90px);
 `;
 
 const Coin = styled.li`
-  background-color: ${(props) => props.theme.btnColor};
-  color: ${(props) => props.theme.bgColor};
-  border-radius: 100%;
-  margin-bottom: 10px;
+  background-color: transparent;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  text-align: center;
 
   a {
     display: block;
-    transition: color 0.3s ease-in;
     padding: 20px;
   }
 
+  h3 {
+    transition: color 0.3s ease-in;
+  }
+
   &:hover {
-    a {
-      color: ${(props) => props.theme.accentColor};
+    h3 {
+      color: ${(props) => props.theme.overViewColor};
     }
   }
 `;
 
-const Title = styled.h1`
-  position: absolute;
-  font-size: 48px;
+const CoinSymbol = styled.h3`
+  margin-top: 10px;
   color: ${(props) => props.theme.accentColor};
 `;
 
@@ -60,15 +93,16 @@ const Loader = styled.span`
 `;
 
 const Image = styled.img`
-  width: 50px;
-  height: 50px;
+  width: 100px;
+  height: 100px;
 `;
 
 const ToggleBtn = styled.button`
+  width: 50px;
+  height: 50px;
   display: flex;
   background: none;
   border: none;
-  margin-left: auto;
 
   &:hover {
     cursor: pointer;
@@ -103,36 +137,48 @@ function Coins() {
   let lightThemeBtn = require(`../images/light_theme.png`);
 
   return (
-    <Container>
-      <Helmet>
-        <title>Coin</title>
-      </Helmet>
+    <>
       <Header>
-        <Title>Coin</Title>
+        <Helmet>
+          <title>Coin Tracker</title>
+        </Helmet>
         <ToggleBtn onClick={toggleDarkAtom}>
           <img
             src={isDark ? darkThemeBtn : lightThemeBtn}
             alt="Toggle Button"
           ></img>
         </ToggleBtn>
+        <Title>Coin Tracker</Title>
+        <Description>
+          The Coin Tracker to help you see short-term changes of top 100
+          cryptocurrency. Note that it shows always-up-to-date cryptocurrency
+          information, fast and useful.
+        </Description>
+        <SubDescription>
+          Click the coin symbol to track the current updated information through
+          charts and price changes.
+        </SubDescription>
       </Header>
-      {isLoading ? (
-        <Loader>"Loading..."</Loader>
-      ) : (
-        <CoinsList>
-          {data?.slice(0, 100).map((coin) => (
-            <Coin key={coin.id}>
-              <Link to={`/${coin.id}`} state={coin}>
-                <Image
-                  src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
-                  alt="Coin Symbol"
-                />
-              </Link>
-            </Coin>
-          ))}
-        </CoinsList>
-      )}
-    </Container>
+      <CoinListContainer>
+        {isLoading ? (
+          <Loader>"Loading..."</Loader>
+        ) : (
+          <CoinsList>
+            {data?.slice(0, 100).map((coin) => (
+              <Coin key={coin.id}>
+                <Link to={`/${coin.id}`} state={coin}>
+                  <Image
+                    src={`https://coinicons-api.vercel.app/api/icon/${coin.symbol.toLowerCase()}`}
+                    alt="Coin Symbol"
+                  />
+                  <CoinSymbol>{coin.symbol}</CoinSymbol>
+                </Link>
+              </Coin>
+            ))}
+          </CoinsList>
+        )}
+      </CoinListContainer>
+    </>
   );
 }
 
